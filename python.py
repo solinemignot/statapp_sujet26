@@ -6,7 +6,7 @@ path="/home/onyxia/work/projet-python/"
 
 
 def dataset_per_year(year):
-    file_name1="carcteristiques_"+year+".csv"
+    file_name1="caracteristiques_"+year+".csv"
     df= pd.read_csv(path+file_name1, sep=';')
     file_name2="lieux_"+year+".csv"
     df2= pd.read_csv(path+file_name2, sep=';',low_memory=False) 
@@ -25,15 +25,12 @@ def complete_dataset():
 
 
 df_2022=dataset_per_year("2022")
-
-def accidents_per_month(df):
-    res=[0 for i in range (12)]
-    for i in range (1,13):
-        res[i-1]= df.loc[df.mois == '0'+str(i) , 'mois'].count()
-    return res
-
-plt.plot([i for i in range (1,13)],accidents_per_month(df_2022))
-plt.show()
+df_2021=dataset_per_year("2021")
+df_2020=dataset_per_year("2020")
+df_2019=dataset_per_year("2019")
+print(df_2022.columns)
+print(df_2021.columns)
+print(df_2019.columns)
 
 
 
