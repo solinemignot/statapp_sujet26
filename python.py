@@ -31,7 +31,7 @@ print(df_2022.columns)
 print(df_2018.columns)
 
 df=complete_dataset()
-print(df.head(5))
+print(type(df))
 
 
 
