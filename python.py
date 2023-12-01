@@ -22,7 +22,7 @@ def complete_dataset():
     for i in range (2006,2019):
         df=pd.concat([df,dataset_per_year(str(i))])
         print(i)
-    return 
+    return df
 
 
 df_2022=dataset_per_year("2022")
@@ -31,7 +31,7 @@ print(df_2022.columns)
 print(df_2018.columns)
 
 df=complete_dataset()
-print(type(df))
+print(df.head(10))
 
 
 
