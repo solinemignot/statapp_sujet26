@@ -22,13 +22,17 @@ def complete_dataset():
     for i in range (2006,2019):
         df=pd.concat([df,dataset_per_year(str(i))])
         print(i)
+    df=df.drop('env1',axis=1)
+    for i in range (2019,2023):
+        df=pd.concat([df,dataset_per_year(str(i))])
+        print(i)
     return df
 
 
 df_2022=dataset_per_year("2022")
 df_2018=dataset_per_year("2018")
-print(df_2022.columns)
-print(df_2018.columns)
+print(df_2022.columns,len(df_2022.columns))
+print(df_2018.columns,len(df_2018.columns))
 
 df=complete_dataset()
 print(df.head(10))
