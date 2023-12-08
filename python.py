@@ -29,14 +29,9 @@ def complete_dataset():
     return df
 
 
-df_2022=dataset_per_year("2022")
-df_2018=dataset_per_year("2018")
-print(df_2022.columns,len(df_2022.columns))
-print(df_2018.columns,len(df_2018.columns))
 
 df=complete_dataset()
 print(df.head(10))
-
 
 
 

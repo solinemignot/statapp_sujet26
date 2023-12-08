@@ -1,0 +1,27 @@
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
+import matplotlib.pyplot as plt
+import numpy as np
+
+path="/home/onyxia/work/projet-python/"
+file_name1="caracteristiques_"+str(2022)+".csv"
+
+france = gpd.read_file(path+'valentin/FRA_adm1.shp')
+france.plot()
+
+df= pd.read_csv(path+file_name1, sep=',',low_memory=False)
+df = df.loc[:,['lat','long']]
+#pd.set_option('display.max.columns', None)
+print(df.head())
+#df.plot(kind='scatter', x='long', y='lat')
+'''
+x=[]
+y=[]
+for e in df.values:
+    e1,e2=e
+    x.append(e1)
+    y.append(e2)
+plt.plot(x,y)
+plt.show()
+'''
