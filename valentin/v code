@@ -9,7 +9,7 @@ path="/home/onyxia/work/projet-python/"
 file_name1="caracteristiques_"+str(2022)+".csv"
 
 france = gpd.read_file(path+'valentin/FRA_adm1.shp')
-
+print(france.head())
 df= pd.read_csv(path+file_name1, sep=',',low_memory=False)
 df = df.loc[:,['lat','long']]
 df["lat"]=df["lat"].str.replace(',','.')
