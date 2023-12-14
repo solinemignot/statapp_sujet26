@@ -1,6 +1,7 @@
+#%%
 import pandas as pd
 import geopandas as gpd
-from shapely.geometry import Point
+from shapely.geometry import Point,Polygon
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -8,20 +9,16 @@ path="/home/onyxia/work/projet-python/"
 file_name1="caracteristiques_"+str(2022)+".csv"
 
 france = gpd.read_file(path+'valentin/FRA_adm1.shp')
-france.plot()
 
 df= pd.read_csv(path+file_name1, sep=',',low_memory=False)
 df = df.loc[:,['lat','long']]
-#pd.set_option('display.max.columns', None)
-print(df.head())
-#df.plot(kind='scatter', x='long', y='lat')
-'''
-x=[]
-y=[]
-for e in df.values:
-    e1,e2=e
-    x.append(e1)
-    y.append(e2)
-plt.plot(x,y)
-plt.show()
-'''
+df["lat"]=df["lat"].str.replace(',','.')
+df["long"]=df["long"].str.replace(',','.')
+
+points = [Point(lon, lat) for ind, lat, lon in df[['lat', 'long']][:1000].itertuples()]
+enedis = gpd.GeoDataFrame(data=dict(geometry=points))
+
+fig, ax = plt.subplots(1, 1)
+france.plot()
+enedis.plot(ax=ax, marker='o', color='red', markersize=1)
+ax.set_title("Carte des accidents en France avec geopandas")
