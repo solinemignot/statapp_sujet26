@@ -28,21 +28,31 @@ plt.savefig(path+'soline/'+'type de route.png')
 plt.show()
 """
 
+
 #Graphique selon la vitesse max de la route
 
 df = df[df['vma'].notna()]
+allowed_values = ['30', '50', '70', '80', '90', '110', '130']
+df.drop(df[~df['vma'].isin(allowed_values)].index, inplace=True)
+df['vma']=df['vma'].replace({'30':30,'50':50,'70':70,'80':80,'90':90,'110':110,'130':130})
+
+
+print(df['vma'].unique())
 graph_df = df.groupby(['grav', 'vma']).size().reset_index(name='accident_count')
 graph_df = graph_df.pivot(index='grav', columns='vma', values='accident_count')
-
+graph_df = graph_df.transpose()
+"""
 plt.figure(figsize=(10, 6))
 for gravity_type in graph_df.index:
     plt.plot(graph_df.columns, graph_df.loc[gravity_type], label=f'Gravity {gravity_type}')
+"""
+ax=graph_df.plot(kind='bar', stacked=False, figsize=(10, 6))
 
 plt.xlabel('Vitesse max de la route')
 plt.ylabel('Nombre d accidents')
 plt.title('Nombre d accidents selon la vitesse max de la route ')
 plt.legend()
-plt.savefig(path+'gagz/'+'vitesse max.png')
+plt.savefig(path+'soline/'+'vitesse max.png')
 plt.show()
 
 # En agglomération ou hors?
