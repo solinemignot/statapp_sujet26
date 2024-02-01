@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-path="/home/onyxia/work/projet-python/"
+path="/home/onyxia/projet-python/"
 
 def caracteristiques():
     file_name1="caracteristiques_"+"2005"+".csv"
@@ -22,6 +22,7 @@ def dataset_per_year(year):
     df=pd.merge(df,df2,on='Num_Acc')
     file_name3="usagers_"+year+".csv"
     df2= pd.read_csv(path+file_name3, sep=',',low_memory=False)
+    df2['grav'] = df2['grav'].replace({2: 4, 4: 2})
     grav_df = df2.groupby('Num_Acc')['grav'].max().reset_index()
     df=pd.merge(df,grav_df,on='Num_Acc')
     df=df.drop_duplicates()
@@ -40,12 +41,8 @@ def complete_dataset():
     return df
 
 df=complete_dataset()
-df=df.drop(columns=['an', 'mois', 'jour', 'hrmn', 'lum', 'agg', 'int', 'atm',
-       'col', 'com', 'adr', 'gps', 'lat', 'long', 'dep','voie', 'v1',
-       'v2', 'circ', 'nbv', 'pr', 'pr1', 'vosp', 'prof', 'plan', 'lartpc',
-       'larrout', 'surf', 'infra', 'situ',  'vma'])
 df['catr'] = pd.to_numeric(df['catr'], errors='coerce')
-
+"""
 graph_df = df.groupby(['grav', 'catr']).size().reset_index(name='accident_count')
 graph_df = graph_df.pivot(index='grav', columns='catr', values='accident_count')
 
@@ -60,6 +57,12 @@ plt.ylabel('Number of Accidents')
 plt.title('Number of Accidents for Each Type of Road by Gravity Type')
 plt.legend()
 plt.show()
+"""
+
+print(df.head(5))
+df.to_csv(path+'dataset_complet.csv', index=False)
+
+
 
 
 
