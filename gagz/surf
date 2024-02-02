@@ -1,1 +1,99 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Définition du chemin commun pour éviter la répétition
+path = "/home/onyxia/work/projet-python/"
+
+def load_data(file_prefix):
+    """
+    Fonction générique pour charger les données à partir des fichiers CSV.
+    """
+    df = pd.DataFrame()
+    for year in range(2005, 2023):
+        file_name = f"{file_prefix}_{year}.csv"
+        df_year = pd.read_csv(path + file_name, sep=',', encoding='latin1', low_memory=False)
+        if file_prefix == 'caracteristiques':
+            df_year['an'] = year  # Ajoutez l'année seulement pour les caractéristiques
+        df = pd.concat([df, df_year])
+    return df
+
+def caracteristiques():
+    df = load_data('caracteristiques')
+    return df[['Num_Acc', 'an']]  # Gardez uniquement les colonnes nécessaires
+
+def lieux():
+    df = load_data('lieux')
+    if 'surf' in df.columns:  # Vérifiez si 'surf' est dans le DataFrame avant de filtrer
+        return df[['Num_Acc', 'surf']]
+    else:
+        return pd.DataFrame(columns=['Num_Acc', 'surf'])  # Retournez un DataFrame vide si 'surf' n'existe pas
+
+df = caracteristiques()
+df2 = lieux()
+df_merge = pd.merge(df, df2, on='Num_Acc')
+
+def map_surface_category(surf_state):
+    """
+    Mapping pour regrouper les états de surface en catégories personnalisées.
+    """
+    if surf_state in [2, 3, 4]:
+        return 'Route avec eau'
+    elif surf_state in [5, 7]:
+        return 'Route gelée'
+    elif surf_state  == 1 :
+        return 'Route normale'
+    elif surf_state in [6,8]:
+        return 'Route boueuse/huileuse'
+    else : 
+        return 'Autre'
+# Appliquer le mapping aux données
+df_merge['surf'] = df_merge['surf'].apply(map_surface_category)
+
+# Filtrer pour exclure les catégories non désirées
+df_filtered = df_merge[df_merge['surf'] != 'Autre']
+
+# Comptez les occurrences pour chaque état de la surface
+surface_counts = df_filtered['surf'].value_counts()
+
+#on remarque que autre est trop important donc on enlève cette variable pour analyser les types de route précisément
+
+# Comptez les occurrences pour chaque catégorie de la surface
+#surface_counts = df_merge['surf'].value_counts()
+#print(surface_counts)
+# Calculez les pourcentages
+surface_percentages = (surface_counts / surface_counts.sum()) * 100
+
+
+# Créez le graphique en camembert avec un explode pour séparer les tranches
+explode_values = (0.1, 0.1, 0.1, 0.1)  # Ajustez ces valeurs au besoin
+fig, ax = plt.subplots()
+wedges, texts, autotexts = ax.pie(
+    surface_percentages,
+    startangle=90,
+    autopct='%1.1f%%',
+    colors=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
+    explode=explode_values  # Utilisez explode pour séparer les tranches
+)
+## Améliorer la lisibilité des pourcentages à l'intérieur des tranches
+plt.setp(autotexts, size=8, weight="bold")
+
+# Ajustement manuel des positions des étiquettes de pourcentage
+for text in autotexts:
+    x, y = text.get_position()
+    if x > 0:
+        # Déplacer légèrement à droite
+        text.set_x(x + 0.1)
+    else:
+        # Déplacer légèrement à gauche
+        text.set_x(x - 0.1)
+
+# Ajoutez une légende avec les vrais noms
+ax.legend(wedges, surface_percentages.index, title="État de la surface", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+# Ajoutez un titre
+ax.set_title('Répartition des conditions de surface lors des accidents routiers (2005-2022)')
+
+# Enregistrez la figure
+plt.savefig(path + 'statap_surf_corrige.png', dpi=300, bbox_inches='tight')
+plt.show()
 
