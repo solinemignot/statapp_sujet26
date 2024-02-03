@@ -67,7 +67,7 @@ df_part2 = df.iloc[midpoint:]
 df_part1.to_csv(path+'dataset_complet_part_1.csv', index=False)
 df_part2.to_csv(path+'dataset_complet_part_2.csv', index=False)
 
-
+print((df.isna().mean() * 100).round(2))
 
 
 
