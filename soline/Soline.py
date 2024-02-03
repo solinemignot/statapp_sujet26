@@ -9,10 +9,9 @@ file_name2="dataset_complet_part_2.csv"
 df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)
 df2= pd.read_csv(path+file_name2, sep=',',low_memory=False)
 df=pd.concat([df1,df2])
-
 df['grav'] = df['grav'].replace({'1':1,'2':2,'3':3,'4':4})
+df=df[df['grav']!='grav']
 
-print((df.isna().mean() * 100).round(2))
 
 # Graphique selon le type de route
 
@@ -35,8 +34,8 @@ plt.savefig(path+'soline/'+'type de route.png')
 plt.show()
 
 #Graphique selon la vitesse max de la route - Useless car trop de valeurs non renseignées
-
-"""df = df[df['vma'].notna()]
+"""
+df = df[df['vma'].notna()]
 allowed_values = ['30', '50', '70', '80', '90', '110', '130']
 df.drop(df[~df['vma'].isin(allowed_values)].index, inplace=True)
 df['vma']=df['vma'].replace({'30':30,'50':50,'70':70,'80':80,'90':90,'110':110,'130':130})
@@ -61,15 +60,15 @@ plt.show()"""
 
 # En agglomération ou hors?
 
+df['agg'] = df['agg'].astype(float)
 df = df[df['agg'].notna()]
 graph_df = df.groupby(['grav', 'agg']).size().reset_index(name='accident_count')
 graph_df = graph_df.pivot(index='grav', columns='agg', values='accident_count')
 
 graph_df = graph_df.transpose()
-#graph_df = graph_df.drop('grav', axis=1)
-#graph_df = graph_df.drop('agg', axis=0)
 ax=graph_df.plot(kind='bar', stacked=True, figsize=(10, 6))
 
+print(graph_df)
 ax.set_xticks(range(len(graph_df.index)))
 ax.set_xticklabels(['Hors agglomération', 'En agglomération'], rotation=0)
 plt.ylabel('Nombre d accidents')

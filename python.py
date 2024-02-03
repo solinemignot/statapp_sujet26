@@ -22,7 +22,9 @@ def dataset_per_year(year):
     df=pd.merge(df,df2,on='Num_Acc')
     file_name3="usagers_"+year+".csv"
     df2= pd.read_csv(path+file_name3, sep=',',low_memory=False)
-    df2['grav'] = df2['grav'].replace({2: 4, 4: 2})
+    if int(year)<2019:
+        df2['grav'] = df2['grav'].replace({2: 4, 4: 2})
+        df2['grav'] = df2['grav'].replace({'2': 4, '4': 2})
     grav_df = df2.groupby('Num_Acc')['grav'].max().reset_index()
     df=pd.merge(df,grav_df,on='Num_Acc')
     df=df.drop_duplicates()
@@ -42,6 +44,8 @@ def complete_dataset():
 
 df=complete_dataset()
 df['catr'] = pd.to_numeric(df['catr'], errors='coerce')
+df['grav'] = df['grav'].replace({'1':1,'2':2,'3':3,'4':4})
+
 """
 graph_df = df.groupby(['grav', 'catr']).size().reset_index(name='accident_count')
 graph_df = graph_df.pivot(index='grav', columns='catr', values='accident_count')
@@ -68,7 +72,6 @@ df_part1.to_csv(path+'dataset_complet_part_1.csv', index=False)
 df_part2.to_csv(path+'dataset_complet_part_2.csv', index=False)
 
 print((df.isna().mean() * 100).round(2))
-
 
 
 
