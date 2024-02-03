@@ -18,14 +18,17 @@ def dataset_per_year(year):
     df_users = df_users[df_users['grav'] != 'grav']
 
     if int(year) < 2019:
-        df_users['grav'] = df_users['grav'].replace({2: 4, 4: 2, '2': 4, '4': 2, '1': 1, '2': 2, '3': 3, '4': 4}).infer_objects(copy=False)
+        df_users['grav'] = df_users['grav'].replace({2: 4, 4: 2, '2': 4, '4': 2, '1': 1, '3': 3}).infer_objects(copy=False)
+        df_users['grav'] = pd.to_numeric(df_users['grav'], errors='coerce')  # Convert to numeric
+    if int(year)>2018:
+        df_users['grav'] = df_users['grav'].replace({'4': 4, '2': 2, '1': 1, '3': 3}).infer_objects(copy=False)
+        df_users['grav'] = df_users['grav'].replace({2: 4, 4: 2})
         df_users['grav'] = pd.to_numeric(df_users['grav'], errors='coerce')  # Convert to numeric
 
     grav_df = df_users.groupby('Num_Acc')['grav'].max().reset_index()
     df = pd.merge(df, grav_df, on='Num_Acc')
     df = df.drop_duplicates()
 
-    file_name_vehicles = f"vehicules_{year}.csv"
     return df
 
 
