@@ -59,8 +59,13 @@ plt.legend()
 plt.show()
 """
 
-print(df.head(5))
-df.to_csv(path+'dataset_complet.csv', index=False)
+num_rows = len(df)
+midpoint = num_rows // 2
+df_part1 = df.iloc[:midpoint]
+df_part2 = df.iloc[midpoint:]
+
+df_part1.to_csv(path+'dataset_complet_part_1.csv', index=False)
+df_part2.to_csv(path+'dataset_complet_part_2.csv', index=False)
 
 
 
