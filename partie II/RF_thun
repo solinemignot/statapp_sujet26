@@ -79,3 +79,6 @@ plt.xticks(range(X_train.shape[1]), [X.columns[i] for i in indices], rotation=45
 plt.xlabel('Variables')
 plt.ylabel('Importance')
 plt.show()
+
+#Meilleurs hyperparamètres: {'max_depth': 10, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'min_samples_split': 10, 'n_estimators': 100}
+#Précision avec les meilleurs hyperparamètres: 0.7628030818037617
