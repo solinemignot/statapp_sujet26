@@ -85,11 +85,13 @@ df = pd.get_dummies(df, columns=['mois'], prefix='mois', dtype=int)
 
 #Dummy departement
 df = pd.get_dummies(df, columns=['dep'], prefix='dep', dtype=int)
+
+
+#Dummy pour les autres colonnes spécifiques
+columns_to_dummy = ['lum', 'agg', 'int', 'atm', 'catr', 'circ', 'nbv', 'prof', 'plan', 'surf', 'situ', 'infra', 'vma']
+df = pd.get_dummies(df, columns=columns_to_dummy, prefix=columns_to_dummy, dtype=int)
+
 print(df)
-
-
-
-
 # Afficher le dataframe avec la nouvelle colonne ajoutée
 #print(df)
 
