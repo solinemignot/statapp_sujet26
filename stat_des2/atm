@@ -1,111 +1,11 @@
 
-"""import matplotlib.pyplot as plt
-import pandas as pd
-import matplotlib.cm as cm
-
-def caracteristiques():
-    path="/home/onyxia/work/projet-python/"
-    df = pd.DataFrame()
-    for year in range(2005, 2023):
-        file_name1 = f"caracteristiques_{year}.csv"
-        df_year = pd.read_csv(path + file_name1, sep=',', low_memory=False)
-        df_year['an'] = year  # Adding the year columnn directly during file reading
-        df = pd.concat([df, df_year])
-    return df
-
-df = caracteristiques()
-# Make sure 'Num_Acc' and 'atm' are present in the 'caracteristiques' files
-df = df[['Num_Acc', 'atm', 'an']]  # Keep only the necessary columnns
-
-def lieux():
-    path="/home/onyxia/work/projet-python/"
-    df = pd.DataFrame()
-    for year in range(2005, 2023):
-        file_name1 = f"lieux_{year}.csv"
-        df_year = pd.read_csv(path + file_name1, sep=',', low_memory=False)
-        df = pd.concat([df, df_year])
-    return df
-
-df2 = lieux()
-# Make sure 'Num_Acc' is present in the 'lieux' files
-df2 = df2[['Num_Acc']]  # Keep only the necessary columnns
-df_merge = pd.merge(df, df2, on='Num_Acc')
-
-
-def map_surface_category(surf_state):
-    if surf_state in [2, 3, 6]:
-        return 'Pluie/tempête'
-    elif surf_state in [4]:
-        return 'Neige'
-    elif surf_state in [5, 8]:
-        return 'Couvert'
-    elif surf_state  in [1,7] :
-        return 'Normale'
-    elif surf_state ==6 :
-        return ''
-    else : 
-        return 'Autre'
-# Appliquer le mapping aux données
-df_merge['atm'] = df_merge['atm'].apply(map_surface_category)
-
-# Filtrer pour exclure les catégories non désirées
-df_filtered = df_merge[df_merge['atm'] != 'Autre']
-
-# Comptez les occurrences pour chaque état de la surface
-surface_counts = df_filtered['atm'].value_counts()
-
-#on remarque que autre est trop important donc on enlève cette variable pour analyser les types de route précisément
-
-# Comptez les occurrences pour chaque catégorie de la surface
-#surface_counts = df_merge['surf'].value_counts()
-#print(surface_counts)
-# Calculez les pourcentages
-surface_percentages = (surface_counts / surface_counts.sum()) * 100
-
-
-# Créez le graphique en camembert avec un explode pour séparer les tranches
-explode_values = (0.1, 0.1, 0.1, 0.1)  # Ajustez ces valeurs au besoin
-fig, ax = plt.subplots()
-wedges, texts, autotexts = ax.pie(
-    surface_percentages,
-    startangle=90,
-    autopct='%1.1f%%',
-    colors=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'],
-    explode=explode_values  # Utilisez explode pour séparer les tranches
-)
-## Améliorer la lisibilité des pourcentages à l'intérieur des tranches
-plt.setp(autotexts, size=8, weight="bold")
-
-# Ajustement manuel des positions des étiquettes de pourcentage
-for text in autotexts:
-    x, y = text.get_position()
-    if x > 0:
-        # Déplacer légèrement à droite
-        text.set_x(x + 0.1)
-    else:
-        # Déplacer légèrement à gauche
-        text.set_x(x - 0.1)
-
-# Ajoutez une légende avec les vrais noms
-ax.legend(wedges, surface_percentages.index, title="Météo", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-
-# Ajoutez un titre
-ax.set_title('Conditions météorologiques lors des accidents routiers (2005-2022)')
-
-# Enregistrez la figure
-plt.savefig('/home/onyxia/work/projet-python/gagz/statap_atm', dpi=300)
-plt.show()"""
-
-
-
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import matplotlib.cm as cm
 
-path="/home/onyxia/projet-python/"
+path="/home/onyxia/work/statapp_sujet26/"
 file_name1="dataset_complet_part_1.csv"
 file_name2="dataset_complet_part_2.csv"
 df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)

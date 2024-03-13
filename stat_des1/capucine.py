@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-path="/home/onyxia/projet-python/"
+path="/home/onyxia/work/statapp_sujet26/"
 file_name1="dataset_complet_part_1.csv"
 file_name2="dataset_complet_part_2.csv"
 df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)

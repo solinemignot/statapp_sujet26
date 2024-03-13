@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 # Charger le jeu de données
-path = "/home/onyxia/work/projet-python/"
+path = "/home/onyxia/work/statapp_sujet26/"
 file_name1 = "dataset_complet_part_1.csv"
 file_name2 = "dataset_complet_part_2.csv"
 df1 = pd.read_csv(path + file_name1, sep=',', low_memory=False)

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-path="/home/onyxia/projet-python/"
+path="/home/onyxia/work/statapp_sujet26/"
 
 
 def dataset_per_year(year):
