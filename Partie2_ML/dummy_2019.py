@@ -31,13 +31,14 @@ df = pd.get_dummies(df, columns=['jour_de_semaine'], prefix='jour', dtype=int)
 
 #Dummy plage horaire
 '''def plage_horaire(heure):
-    if 5 <= heure < 12:
+    heure=heure[:2]
+    if '05' <= heure < '12':
         return 'matin'
-    elif 12 <= heure < 14:
+    elif '12' <= heure < '14':
         return 'midi'
-    elif 14 <= heure < 18:
+    elif '14' <= heure < '18':
         return 'après-midi'
-    elif 18 <= heure < 22:
+    elif '18' <= heure < '22':
         return 'soir'
     else:
         return 'nuit'
