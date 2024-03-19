@@ -31,9 +31,14 @@ rf_classifier = RandomForestClassifier(random_state=42)
 # Entraîner le modèle
 rf_classifier.fit(X_train, y_train)
 
-# Faire des prédictions sur l'ensemble de test
-y_pred = rf_classifier.predict(X_test)
+# Faire des prédictions sur l'ensemble de test : y_pred = rf_classifier.predict(X_test)
 
-# Évaluer les performances du modèle
-accuracy = accuracy_score(y_test, y_pred)
-print("Précision du modèle sans ajustement des hyperparamètres:", accuracy)
+# Évaluer les performances du modèle : accuracy = accuracy_score(y_test, y_pred)
+
+# Calculer les scores de validation croisée à k plis
+cross_val_scores = cross_val_score(rf_classifier, X, y, cv=5)
+
+# Calculer la moyenne des scores de validation croisée
+mean_accuracy = cross_val_scores.mean()
+
+print("Précision moyenne avec validation croisée à 5 plis:", mean_accuracy)
