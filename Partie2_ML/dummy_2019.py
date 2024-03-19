@@ -7,6 +7,8 @@ df1 = pd.read_csv(path + file_name1, sep=',', low_memory=False)
 df2 = pd.read_csv(path + file_name2, sep=',', low_memory=False)
 df = pd.concat([df1, df2])
 df = df.loc[df['an'] == 2019]
+df.replace(-1, pd.NA, inplace=True)
+
 
 
 #Dummy heure de pointe
@@ -85,10 +87,8 @@ df = pd.get_dummies(df, columns=['mois'], prefix='mois', dtype=int)
 
 # Dummy pour les variables spécifiées, en excluant les valeurs égales à -1 : celles qui ont pas de sens (valeur num )
 columns_to_dummy = ['lum', 'agg', 'int', 'atm', 'catr', 'circ', 'prof', 'plan', 'surf', 'situ', 'infra']
+ 
 for column in columns_to_dummy:
-    if -1 in df[column].unique():
-        df[column] = df[column].replace(-1, pd.NA)
-    else:
         df = pd.get_dummies(df, columns=[column], prefix=[column], dtype=int)
 
 # Dummy département
@@ -214,11 +214,6 @@ df = pd.get_dummies(df, columns=['region'], prefix='region', dtype=int)
 # Enlever les colonnes spécifiées
 columns_to_drop = ['Num_Acc', 'an', 'jour', 'hrmn', 'col', 'dep','com', 'adr', 'gps', 'lat', 'long', 'voie', 'v1', 'v2', 'pr', 'pr1', 'vosp', 'lartpc', 'larrout', 'date']
 df.drop(columns=columns_to_drop, inplace=True)
-
-# Enregistrer le DataFrame dans un nouveau fichier CSV
-output_file = "/home/onyxia/work/statapp_sujet26/dataset_2019_dummy.csv"
-df.to_csv(output_file, index=False)
-
 
 
 # Afficher les premières lignes avec toutes les colonnes visibles
