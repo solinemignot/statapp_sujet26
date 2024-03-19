@@ -1,3 +1,4 @@
+#%%
 # Import des bibliothèques nécessaires
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,7 +10,7 @@ from sklearn.metrics import accuracy_score
 
 # Charger le jeu de données
 path = "/home/onyxia/work/statapp_sujet26/"
-file_name = "dataset_2019_dummy.csv"
+file_name = "dataset_2019_dummy_2nd.csv"
 df = pd.read_csv(path + file_name, sep=',', low_memory=False)
 
 # Modifier la colonne 'grav' pour un problème de classification binaire
@@ -20,25 +21,25 @@ y = df['grav']
 X = df.drop(columns=['grav'])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
 
-# Normaliser les fonctionnalités
-sc = StandardScaler()
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
-
 # Créer un classifieur Random Forest
 rf_classifier = RandomForestClassifier(random_state=42)
 
 # Entraîner le modèle
 rf_classifier.fit(X_train, y_train)
 
-# Faire des prédictions sur l'ensemble de test : y_pred = rf_classifier.predict(X_test)
+# Extraire l'importance des features
+importances = rf_classifier.feature_importances_
 
-# Évaluer les performances du modèle : accuracy = accuracy_score(y_test, y_pred)
+# Calculer le pourcentage d'importance de chaque feature
+total_importance = np.sum(importances)
+percentage_importance = (importances / total_importance) * 100
 
-# Calculer les scores de validation croisée à k plis
-cross_val_scores = cross_val_score(rf_classifier, X, y, cv=5)
+# Créer un DataFrame pour stocker les noms des features et leur pourcentage d'importance
+feature_names = X.columns
+indices = np.argsort(importances)[::-1]
+feature_df = pd.DataFrame({'Feature': feature_names[indices], 'Importance (%)': percentage_importance})
 
-# Calculer la moyenne des scores de validation croisée
-mean_accuracy = cross_val_scores.mean()
+# Afficher le DataFrame
+print(feature_df)
 
-print("Précision moyenne avec validation croisée à 5 plis:", mean_accuracy)
+# %%
