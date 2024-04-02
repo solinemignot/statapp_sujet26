@@ -215,6 +215,19 @@ df = pd.get_dummies(df, columns=['region'], prefix='region', dtype=int)
 columns_to_drop = ['Num_Acc', 'an', 'jour', 'hrmn', 'col', 'dep','com', 'adr', 'gps', 'lat', 'long', 'voie', 'v1', 'v2', 'pr', 'pr1', 'vosp', 'lartpc', 'larrout', 'date']
 df.drop(columns=columns_to_drop, inplace=True)
 
+num_rows = len(df)
+quart=num_rows // 4
+midpoint = num_rows // 2
+troisquarts=3* (num_rows // 4)
+df_part1 = df.iloc[:quart]
+df_part2 = df.iloc[quart:midpoint]
+df_part3 = df.iloc[midpoint: troisquarts]
+df_part4 = df.iloc[troisquarts]
+
+df_part1.to_csv(path+'dataset_complet_avec_dummies_part_1.csv', index=False)
+df_part2.to_csv(path+'dataset_complet_avec_dummies_part_2.csv', index=False)
+df_part3.to_csv(path+'dataset_complet_avec_dummies_part_3.csv', index=False)
+df_part4.to_csv(path+'dataset_complet_avec_dummies_part_4.csv', index=False)
 
 # Afficher les premières lignes avec toutes les colonnes visibles
 with pd.option_context('display.max_columns', None):
