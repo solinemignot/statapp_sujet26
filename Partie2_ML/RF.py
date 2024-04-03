@@ -10,8 +10,13 @@ from sklearn.metrics import accuracy_score
 
 # Charger le jeu de données
 path = "/home/onyxia/work/statapp_sujet26/"
-file_name = "dataset_2019_dummy_2nd.csv"
-df = pd.read_csv(path + file_name, sep=',', low_memory=False)
+file_name1="dataset_complet_avec_dummies_part_1.csv"
+file_name2="dataset_complet_avec_dummies_part_2.csv"
+df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)
+df2= pd.read_csv(path+file_name2, sep=',',low_memory=False)
+df=pd.concat([df1,df2])
+colonnes_specifiques = ['grav','nbv']
+df= df.loc[:, colonnes_specifiques]
 
 # Modifier la colonne 'grav' pour un problème de classification binaire
 df['grav'] = df['grav'].replace({1: 0, 2: 0, 3: 1, 4: 1})
@@ -39,7 +44,5 @@ feature_names = X.columns
 indices = np.argsort(importances)[::-1]
 feature_df = pd.DataFrame({'Feature': feature_names[indices], 'Importance (%)': percentage_importance})
 
-# Afficher le DataFrame
-print(feature_df)
 
 # %%

@@ -10,6 +10,7 @@ df2 = pd.read_csv(path + file_name2, sep=',', low_memory=False)
 df = pd.concat([df1, df2])
 df = df.loc[df['an'] == 2019]
 df['grav'] = df['grav'].replace({1: 0, 2: 0, 3: 1, 4: 1})
+df['nbv'] = df['nbv'].astype(float)
 
 #afficher le pourcentage
 counts = df['grav'].value_counts()
@@ -25,3 +26,4 @@ print("Pourcentage de gravité 1:", percentage_1)
 missing_percentage = ((df.isna() | (df == -1)).sum() / len(df)) * 100
 print("Pourcentage de valeurs manquantes par variable (N/A + non renseigné -1 ) :")
 print(missing_percentage)
+
