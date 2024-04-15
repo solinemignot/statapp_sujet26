@@ -118,17 +118,24 @@ plt.legend()
 plt.savefig(path+'stat_des3/'+'type de route 2019.png')
 plt.show()
 
-
+#Vitesse max
 df=pd.concat([df1,df2])
 df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1,1: 0, 2: 0, 3: 1, 4: 1}).astype(int)
 df = df[ df['an']== 2019]
 df['vma']=df['vma'].replace({1.:10, 2.:20 , 3.:30, 4.:40,5.:50,6.:60,7.:70,8.:80,9.:90,500:50,12:120,560:-1,700:70,800:80,600:60,300:30,900:90,520:50,901:90,501:50,502:50,770:70,42:-1,0:-1,140:-1,180:-1})
 df['vma']=df['vma'].replace({15:20,25:30,45:50,55:50,65:70,75:80,35:30,120:110 })
+df['vma']=df['vma'].replace({10:-1, 20:-1,40:-1,60:-1,100:-1})
 df = df[ df['vma']!= -1]
 
 graph_df = df.groupby(['grav', 'vma']).size().reset_index(name='accident_count')
 graph_df = graph_df.pivot(index='grav', columns='vma', values='accident_count')
 graph_df = graph_df.transpose()
+
+print(graph_df)
+
+percentage_grav0= [round(graph_df.loc[i,0]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in [30.0,50.0,70.0,80.0,90.0,110.0,130.0]]
+percentage_grav1= [round(graph_df.loc[i,1]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in [30.0,50.0,70.0,80.0,90.0,110.0,130.0]]
+
 
 plt.figure(figsize=(10, 6))
 for gravity_type in graph_df.index:
@@ -140,8 +147,22 @@ plt.xlabel('Vitesse max de la route')
 plt.ylabel('Nombre d accidents')
 plt.title('Nombre d accidents selon la vitesse max de la route ')
 plt.legend()
+
+"""i = 0
+for p in graph:
+    width = p.get_width()
+    height = p.get_height()
+    x, y = p.get_xy()
+    plt.text(x+width/2,
+             y+height*1.01,
+             str(data.Percentage[i])+'%',
+             ha='center',
+             weight='bold')
+    i+=1"""
+
+
+
 plt.savefig(path+'stat_des3/'+'vitesse max 2019.png')
-plt.show()
 
 #Agglomération?
 df=pd.concat([df1,df2])
