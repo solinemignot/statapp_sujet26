@@ -103,6 +103,7 @@ file_name2 = "dataset_complet_part_2.csv"
 df1 = pd.read_csv(path + file_name1, sep=',', low_memory=False)
 df2 = pd.read_csv(path + file_name2, sep=',', low_memory=False)
 df = pd.concat([df1, df2])
+df['an'] = df['an'].astype(int)
 
 # Convertir la colonne "grav" en valeurs binaires (0 ou 1)
 df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1,1: 0, 2: 0, 3: 1, 4: 1}).astype(int)
@@ -178,6 +179,10 @@ plt.title('Nombre d accidents selon l heure de la journée')
 plt.xticks(rotation=45, ha='right')
 num_columns = graph_df.shape[1]
 specific_hours = ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00']
+plt.axvline(x=700*num_columns/2359, color="black")
+plt.axvline(x=1000*num_columns/2359, color="black")
+plt.axvline(x=1630*num_columns/2359, color="black")
+plt.axvline(x=1930*num_columns/2359, color="black")
 tick_positions = [int(i*300*num_columns/2359)for i in range (8)]
 plt.xticks(tick_positions, specific_hours, rotation=45, ha='right')
 

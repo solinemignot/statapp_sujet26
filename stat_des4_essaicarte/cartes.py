@@ -31,6 +31,24 @@ fig, ax = plt.subplots(1, 1, figsize=(15, 10))
 merged_data.plot(column='grav', cmap='YlOrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True)
 ax.set_title('Nombre d accidents par département en France')
 ax.set_axis_off()
-plt.savefig(path+'stat_des4_essaicarte/'+'carte .png')
+plt.savefig(path+'stat_des4_essaicarte/'+'carte.png')
 plt.show()
 
+#Pourcentage de gravité 1 par département
+
+df_grav1=df[df['grav']==1]
+df_grav1=df_grav1[['dep','grav']]
+df_grav1 = df_grav1.dropna()
+df_grav1 = df_grav1.groupby('dep')['grav'].count().reset_index()
+df_grav1['perc']=df_grav1['grav']/(df_carte['grav'])*100
+df_grav1=df_grav1[['dep','perc']]
+
+merged_data = france.merge(df_grav1, how='left', left_on='code', right_on='dep')
+
+plt.figure(figsize=(10, 6))
+fig, ax = plt.subplots(1, 1, figsize=(15, 10))
+merged_data.plot(column='perc', cmap='YlOrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True)
+ax.set_title('Pourcentage d accidents graves par département en France')
+ax.set_axis_off()
+plt.savefig(path+'stat_des4_essaicarte/'+'carte pourcentages.png')
+plt.show()
