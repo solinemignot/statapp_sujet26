@@ -96,6 +96,7 @@ plt.show()
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 path = "/home/onyxia/work/statapp_sujet26/"
 file_name1 = "dataset_complet_part_1.csv"
@@ -120,11 +121,20 @@ graph_df = df.groupby(['grav', 'mois']).size().unstack(fill_value=0)
 # Renommer les colonnes pour les étiquettes de l'axe x
 months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 graph_df.columns = months
+Y1=np.array(graph_df.iloc[0])
+Y2=np.array(graph_df.iloc[1])
+
+total_accidents = Y1 + Y2
+percentage_gravity_1 = (Y2 / total_accidents) * 100
 
 # Tracer le graphique
 plt.figure(figsize=(10, 6))
-plt.plot(graph_df.columns, graph_df.iloc[0], label='gravité 0', marker='o', linestyle='-')
-plt.plot(graph_df.columns, graph_df.iloc[1], label='gravité 1', marker='o', linestyle='-')
+plt.plot(months, Y1, label='gravité 0', marker='o', linestyle='-')
+plt.plot(months, Y2, label='gravité 1', marker='o', linestyle='-')
+
+# Add annotations
+for i, (y1, y2, month, perc) in enumerate(zip(Y1, Y2, months, percentage_gravity_1)):
+    plt.annotate(f'{perc:.2f}%', (months[i], Y2[i]), textcoords="offset points", xytext=(0, 10), ha='center')
 
 plt.xticks(rotation=45, ha='right')
 plt.ylabel('Nombre d\'accidents')
@@ -179,11 +189,11 @@ plt.title('Nombre d accidents selon l heure de la journée')
 plt.xticks(rotation=45, ha='right')
 num_columns = graph_df.shape[1]
 specific_hours = ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00']
-plt.axvline(x=700*num_columns/2359, color="black")
-plt.axvline(x=1000*num_columns/2359, color="black")
-plt.axvline(x=1630*num_columns/2359, color="black")
-plt.axvline(x=1930*num_columns/2359, color="black")
-tick_positions = [int(i*300*num_columns/2359)for i in range (8)]
+plt.axvline(x=700*num_columns/2359, color="black", linestyle='--', label='Heures de pointe')
+plt.axvline(x=930*num_columns/2359, color="black", linestyle='--')
+plt.axvline(x=1630*num_columns/2359, color="black", linestyle='--')
+plt.axvline(x=1900*num_columns/2359, color="black", linestyle='--')
+tick_positions = [int(i*300*num_columns/2359) for i in range(8)]
 plt.xticks(tick_positions, specific_hours, rotation=45, ha='right')
 
 
