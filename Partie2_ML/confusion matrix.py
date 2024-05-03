@@ -21,7 +21,33 @@ df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1,1: 0, 2: 0, 3: 1
 # Filtrer les données pour l'année 2019
 df = df[df['an'] == 2019]
 
-df_num = df.select_dtypes(include = ['float64', 'int64'])
+# Créer un dictionnaire de mapping des anciens noms aux nouveaux noms
+nouveaux_noms = {
+    'mois': 'Mois',
+    'jour': 'Jour',
+    'hrmn': 'Heure',
+    'lum': 'Luminosité',
+    'agg': 'Agglomération',
+    'int': 'Intersection',
+    'atm': 'Météo',
+    'col': 'Collision',
+    'dep': 'Département',
+    'catr': 'TypeR',
+    'circ': 'Circulation',
+    'nbv': 'Nb voies',
+    'vosp': 'Voie réservée',
+    'prof': 'Pente',
+    'plan': 'FormeR',
+    'surf': 'SurfaceR',
+    'infra': 'AménagementR',
+    'situ': 'SituationAcc',
+    'vma': 'VitesseMax'
+}
+
+# Utiliser le dictionnaire pour changer les noms des variables
+df.rename(columns=nouveaux_noms, inplace=True)
+
+df_num = df.select_dtypes(include=['float64', 'int64'])
 df_num.head()
 plt.figure(figsize=(8, 6))
 sns.set_theme(style="white")
@@ -34,6 +60,6 @@ sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
 
-plt.title('Confusion Matrix en 2019')
-plt.savefig(path+'Partie2_ML/'+'confusion_matrix.png')  # Save the confusion matrix as an image
+plt.title('Matrice de corrélation pour 2019')
+plt.savefig(path+'Partie2_ML/'+'confusion_matrix.png')  # Enregistrer la matrice de confusion en tant qu'image
 plt.show()
