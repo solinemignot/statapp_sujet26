@@ -96,6 +96,7 @@ corr = df_num.corr()
 
 # Tracer la heatmap de la matrice de corrélation
 plt.figure(figsize=(12, 10))
+plt.subplots_adjust(left=0.25)
 sns.set_theme(style="white")
 mask = np.triu(np.ones_like(corr, dtype=bool))
 
