@@ -189,7 +189,7 @@ plt.title('Nombre d accidents selon l heure de la journée')
 plt.xticks(rotation=45, ha='right')
 num_columns = graph_df.shape[1]
 specific_hours = ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00']
-plt.axvline(x=700*num_columns/2359, color="black", linestyle='--', label='Heures de pointe')
+plt.axvline(x=700*num_columns/2359, color="black", linestyle='--', label='Heure de pointe')
 plt.axvline(x=930*num_columns/2359, color="black", linestyle='--')
 plt.axvline(x=1630*num_columns/2359, color="black", linestyle='--')
 plt.axvline(x=1900*num_columns/2359, color="black", linestyle='--')

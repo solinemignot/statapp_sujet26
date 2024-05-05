@@ -136,6 +136,8 @@ print(graph_df)
 percentage_grav0= [round(graph_df.loc[i,0]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in [30.0,50.0,70.0,80.0,90.0,110.0,130.0]]
 percentage_grav1= [round(graph_df.loc[i,1]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in [30.0,50.0,70.0,80.0,90.0,110.0,130.0]]
 
+print(percentage_grav0)
+print(percentage_grav1)
 
 plt.figure(figsize=(10, 6))
 for gravity_type in graph_df.index:
