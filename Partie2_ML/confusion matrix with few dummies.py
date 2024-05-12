@@ -83,7 +83,7 @@ nouveaux_noms = {
 df.rename(columns=nouveaux_noms, inplace=True)
 
 
-columns_to_drop = ['Num_Acc', 'an', 'jour', 'hrmn','com', 'adr', 'gps', 'lat', 'long', 'voie', 'v1', 'v2', 'pr', 'pr1', 'lartpc', 'larrout', 'date']
+columns_to_drop = ['Num_Acc', 'an', 'com', 'adr', 'gps', 'lat', 'long', 'voie', 'v1', 'v2', 'pr', 'pr1', 'lartpc', 'larrout', 'date']
 df.drop(columns=columns_to_drop, inplace=True)
 
 
