@@ -1,20 +1,19 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
-import matplotlib.cm as cm
 
-path="/home/onyxia/work/statapp_sujet26/"
-file_name1="dataset_complet_part_1.csv"
-file_name2="dataset_complet_part_2.csv"
-df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)
-df2= pd.read_csv(path+file_name2, sep=',',low_memory=False)
-df=pd.concat([df1,df2])
-df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1,1: 0, 2: 0, 3: 1, 4: 1}).astype(int)
-df = df[ df['an']== 2019]
+path = "/home/onyxia/work/statapp_sujet26/"
+file_name1 = "dataset_complet_part_1.csv"
+file_name2 = "dataset_complet_part_2.csv"
+df1 = pd.read_csv(path + file_name1, sep=',', low_memory=False)
+df2 = pd.read_csv(path + file_name2, sep=',', low_memory=False)
+df = pd.concat([df1, df2])
+df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1, 1: 0, 2: 0, 3: 1, 4: 1}).astype(int)
+df = df[df['an'] == 2019]
 
-df=df[['Num_Acc', 'an','surf','grav']]
+print((df.isna().mean() * 100).round(2))
+
+df = df[['Num_Acc', 'an', 'surf', 'grav']]
 
 def map_surface_category(surf_state):
     """
@@ -24,53 +23,41 @@ def map_surface_category(surf_state):
         return 'Route avec eau'
     elif surf_state in [5, 7]:
         return 'Route gelée'
-    elif surf_state  == 1 :
+    elif surf_state == 1:
         return 'Route normale'
-    elif surf_state in [6,8]:
+    elif surf_state in [6, 8]:
         return 'Route boueuse/huileuse'
-    else : 
+    else:
         return 'Autre'
-# Appliquer le mapping aux données
+
+# Apply the mapping to the data
 df['surf'] = df['surf'].apply(map_surface_category)
 
-# Filtrer pour exclure les catégories non désirées
+# Filter to exclude unwanted categories
 df_filtered = df[df['surf'] != 'Autre']
+
 # Define the desired order of surface categories
 desired_order = ['Route normale', 'Route boueuse/huileuse', 'Route avec eau', 'Route gelée']
 
-for gr in (0, 1):
-    df2 = df_filtered[df_filtered['grav'] == gr]
-    surface_counts = df2['surf'].value_counts()
+# Create a pivot table to prepare data for the graph
+pivot_table = df_filtered.pivot_table(index='surf', columns='grav', aggfunc='size', fill_value=0)
 
-    # Sort the surface percentages based on the desired order
-    surface_percentages = surface_counts.loc[desired_order]
-    surface_percentages = (surface_percentages / surface_percentages.sum()) * 100
+# Plot the bar chart
+plt.figure(figsize=(10, 6))
+ax = pivot_table.plot(kind='bar', stacked=False)
 
-    explode_values = (0.1, 0.1, 0.1, 0.1)  # Adjust as needed
+# Customize labels and title
+plt.xlabel('État de la surface')
+plt.ylabel("Nombre d'accidents")
+plt.title("Répartition des conditions de surface lors des accidents routiers en 2019")
 
-    fig, ax = plt.subplots()
-    wedges, autotexts = ax.pie(surface_percentages, startangle=90, colors=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'], explode=explode_values)
+# Add legend
+plt.legend(title='Gravité')
 
-    plt.setp(autotexts, size=8, weight="bold")
+# Adjust x-axis labels
+labels = [label[:15] for label in pivot_table.index]
+plt.xticks(range(len(labels)), labels, rotation=0, fontsize=8)
 
-    # Calculate positions for percentages outside of the pie chart
-    angles = np.linspace(0, 2 * np.pi, len(surface_percentages.index), endpoint=False).tolist()
-    for i, (wedge, autotext) in enumerate(zip(wedges, autotexts)):
-        angle = (wedge.theta2 + wedge.theta1) / 2
-        x = wedge.r * 1.1 * np.cos(np.deg2rad(angle))
-        y = wedge.r * 1.1 * np.sin(np.deg2rad(angle))
-        autotext.set_position((x, y))
-
-        # Add percentages outside the pie slices
-        autotext.set_text(f'{surface_percentages.iloc[i]:.1f}%')
-
-    ax.legend(wedges, surface_percentages.index, title="État de la surface", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-    ax.set_title('Répartition des conditions de surface lors des accidents routiers en 2019 pour la gravité ' + str(gr))
-
-    plt.savefig(path + 'stat_des2/statap_surf_corrige ' + str(gr) + '.png', dpi=300, bbox_inches='tight')
-    plt.show()
-
-
-
-
-
+# Save the figure
+plt.savefig(path + 'stat_des2/statap_surf_corrige.png', bbox_inches='tight')
+plt.show()
