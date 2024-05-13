@@ -1,85 +1,92 @@
-
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
-import matplotlib.cm as cm
 
-path="/home/onyxia/work/statapp_sujet26/"
-file_name1="dataset_complet_part_1.csv"
-file_name2="dataset_complet_part_2.csv"
-df1= pd.read_csv(path+file_name1, sep=',',low_memory=False)
-df2= pd.read_csv(path+file_name2, sep=',',low_memory=False)
-df=pd.concat([df1,df2])
-df['grav'] = df['grav'].replace({'1':1,'2':2,'3':3,'4':4})
-df=df[df['grav']!='grav']
+path = "/home/onyxia/work/statapp_sujet26/"
+file_name1 = "dataset_complet_part_1.csv"
+file_name2 = "dataset_complet_part_2.csv"
+df1 = pd.read_csv(path + file_name1, sep=',', low_memory=False)
+df2 = pd.read_csv(path + file_name2, sep=',', low_memory=False)
+df = pd.concat([df1, df2])
+df = df[df['an'] == 2019]  # Filter data for the year 2019
+df['grav'] = df['grav'].replace({'1': 0, '2': 0, '3': 1, '4': 1, 1: 0, 2: 0, 3: 1, 4: 1}).astype(int)
 
-# Make sure 'Num_Acc' and 'lum' are present in the 'caracteristiques' files
-df = df[['Num_Acc', 'lum', 'an','grav']]  # Keep only the necessary columns
-
-# Ensure 'lum' column is string and strip whitespaces
+# Select relevant columns and ensure 'lum' column is string and strip whitespaces
+df = df[['an', 'grav', 'lum']]
 df['lum'] = df['lum'].astype(str).str.strip()
-
-# Normalize values in 'lum' column
 df['lum'] = df['lum'].replace({"1.0": "1", "2.0": "2", "3.0": "3", "4.0": "4", "5.0": "5"})
-legend_labels = ['1 : Plein jour','2 : Crépuscule ou aube','3 : Nuit sans éclairage public','4 : Nuit avec éclairage public non allumé','5 : Nuit avec éclairage public allumé']
 
+# Define legend labels
+legend_labels = ['Plein jour', 'Crépuscule ou aube', 'Nuit sans éclairage public', 
+                 'Nuit avec éclairage public non allumé', 'Nuit avec éclairage public allumé']
+"""
+for gr in (0, 1):
+    df_gravity = df[df['grav'] == gr].dropna(subset=['lum', 'an'])  # Filter by gravity and remove NaN values
+    df_gravity = df_gravity[df_gravity['lum'] != '-1.0']  # Remove rows with invalid 'lum' values
 
-for gr in (2,3,4):
-    df2=df[df['grav']==gr]
-    df2 = df2[df2['lum'].notna()]
-    df2=df2[df2['lum']!='-1.0']
-# Group data by year and lighting condition, then count occurrences
-    print(df2['lum'].unique())
-    grouped_data = df2.groupby(['an', 'lum']).size().unstack().fillna(0)
+    # Group data by year and lighting condition, then calculate percentages
+    grouped_data = df_gravity.groupby(['an', 'lum']).size().unstack(fill_value=0)
     grouped_data_percentage = grouped_data.div(grouped_data.sum(axis=1), axis=0) * 100
-    print(grouped_data.columns)
 
+    # Plot the stacked bar chart
+    ax = grouped_data_percentage.plot(kind='bar', stacked=True, figsize=(12, 6), colormap='viridis')
 
-# Create a larger figure for better readability
-    fig, ax = plt.subplots(figsize=(18, 10))
+    # Add labels and title
+    plt.title('Conditions d\'éclairage lors des accidents routiers pour la gravité ' + str(gr))
+    plt.xlabel('Année')
+    plt.ylabel('Pourcentage')
+    plt.xticks(rotation=45)
+    plt.yticks(fontsize=10)
 
-# Define a colormap
-    colors =plt.get_cmap('viridis', len(grouped_data.columns))
+    # Add legend with customized labels
+    ax.legend(legend_labels, title='Condition d\'éclairage', title_fontsize=10, fontsize=8, bbox_to_anchor=(1.04, 1), loc='upper left')
 
-# Create a stacked bar chart with sorted data and apply the colormap
-    grouped_data_percentage.plot(kind='bar', stacked=True, color=[colors(i) for i in range(len(grouped_data.columns))], ax=ax)
+    # Annotate percentages in the bars
+    for i, (index, row) in enumerate(grouped_data_percentage.iterrows()):
+        for lum, percentage in row.items():
+            if percentage > 0.5:  # Threshold for displaying percentages
+                ax.text(i, row[:lum].sum() + percentage / 2, f'{percentage:.1f}%', ha='center', va='center', color='white', fontsize=6)
 
-# Add labels and title with increased font size
-    plt.title('Conditions d\'éclairage lors des accidents routiers pour la gravité ' +str(gr), fontsize=15)
-    plt.xlabel('Année', fontsize=12)
-    plt.ylabel('Pourcentage', fontsize=12)
-    plt.xticks(fontsize=12, rotation=45)
-    plt.yticks(fontsize=12)
+    # Save the figure
+    plt.savefig(path + 'stat_des2/eclairage_grav_' + str(gr) + '.png', dpi=300, bbox_inches='tight')
+    plt.show()"""
+import pandas as pd
+import matplotlib.pyplot as plt
+import textwrap
 
-# Manually define legend labels with increased font size
-    ax.legend(legend_labels, title='Condition d\'éclairage', title_fontsize=12, fontsize=11, bbox_to_anchor=(1.04, 1), loc='upper left')
+# Filter data and replace numeric codes with descriptive labels
+df = df[df['lum'] != '-1.0']  # Remove rows with invalid 'lum' values
+df['lum'] = df['lum'].replace({"1.0": "1", "2.0": "2", "3.0": "3", "4.0": "4", "5.0": "5"})
+df['lum'] = df['lum'].replace({'1': 'Plein jour', '2': 'Crépuscule ou aube', '3': 'Nuit sans éclairage public',
+                               '4': 'Nuit avec éclairage public non allumé', '5': 'Nuit avec éclairage public allumé'})
 
-# Adjust layout for tight fit and larger legend
-    plt.tight_layout(rect=[0, 0, 0.85, 1])
+# Group data by gravity and lighting conditions, then count occurrences
+graph_df = df.groupby(['grav', 'lum']).size().reset_index(name='accident_count')
+graph_df = graph_df.pivot(index='lum', columns='grav', values='accident_count').fillna(0)
 
+print(graph_df)
+percentage_grav0= [round(graph_df.loc[i,0]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in ['Plein jour','Crépuscule ou aube','Nuit sans éclairage public','Nuit avec éclairage public non allumé','Nuit avec éclairage public allumé']]
+percentage_grav1= [round(graph_df.loc[i,1]/(graph_df.loc[i,0]+graph_df.loc[i,1])*100,2) for i in ['Plein jour','Crépuscule ou aube','Nuit sans éclairage public','Nuit avec éclairage public non allumé','Nuit avec éclairage public allumé']]
 
+print(percentage_grav0)
+print(percentage_grav1)
 
-    threshold = 0.1  # Seuil ajusté pour éviter d'afficher les pourcentages trop petits
+# Plot the bar chart
+plt.figure(figsize=(10, 6))
+ax = graph_df.plot(kind='bar', stacked=False)
 
-# Calculer la position cumulée pour l'annotation des pourcentages
-    cumulative_heights = grouped_data_percentage.cumsum(axis=1)
+# Customize labels and title
+plt.xlabel('Condition d\'éclairage')
+plt.ylabel('Nombre d\'accidents')
+plt.title('Nombre d\'accidents par condition d\'éclairage selon la gravité')
 
-# Annoter les pourcentages dans les barres
-    for i in range(len(grouped_data_percentage)):
-        for j in range(len(grouped_data_percentage.columns)):
-            value = grouped_data_percentage.iloc[i, j]
-            if value > threshold:
-            # Positionner le texte au milieu de la portion de la barre
-                center = (cumulative_heights.iloc[i, j] - value) + (value / 2)
-            # S'assurer que la valeur est supérieure à 0 avant d'ajouter l'étiquette
-                if value > 0:
-                    ax.text(i, center, f'{value:.1f}%', ha='center', va='center', color='white', fontsize=7, fontweight='bold', rotation = 45)
-
-
+# Add legend
+plt.legend(title='Gravité')
+labels = [textwrap.fill(label, 15) for label in graph_df.index]
+plt.xticks(range(len(labels)), labels, rotation=0, fontsize=8)
 
 # Save the figure
-    plt.savefig('/home/onyxia/projet-python/gagz/statap '+str(gr), dpi=300)
+plt.savefig(path + 'stat_des2/' + 'condition_eclairage_2019.png', bbox_inches='tight')
+plt.show()
 
 
 

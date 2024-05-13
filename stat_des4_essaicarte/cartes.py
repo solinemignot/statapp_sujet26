@@ -34,6 +34,7 @@ ax.set_axis_off()
 plt.savefig(path+'stat_des4_essaicarte/'+'carte.png')
 plt.show()
 
+
 #Pourcentage de gravité 1 par département
 
 df_grav1=df[df['grav']==1]
